@@ -2,8 +2,6 @@ package com.jcrawley.adventuregame.service.level;
 
 import android.content.Context;
 
-import com.jcrawley.adventuregame.R;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,17 +19,14 @@ public class LevelReader {
 
 
     public void readLevel(int resId){
+        levelParser.initLevel();
         try(InputStream is = context.getResources().openRawResource(resId);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is))){
-            String line = reader.readLine();
-            while (line != null) {
-                levelParser.parse(line);
-                line = reader.readLine();
-            }
+            reader.lines().forEach(levelParser::parse);
+            Level level = levelParser.getLevel();
         }
         catch(IOException e){
             e.printStackTrace();
-
         }
 
     }

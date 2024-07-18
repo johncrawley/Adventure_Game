@@ -29,4 +29,8 @@ public class Level {
     public Page getPage(int pageNumber){
         return pageMap.get(pageNumber);
     }
+
+    public Map<Integer, Page> getPages(){
+        return pageMap;
+    }
 }
