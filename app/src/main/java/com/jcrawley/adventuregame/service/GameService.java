@@ -8,6 +8,9 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.jcrawley.adventuregame.MainActivity;
+import com.jcrawley.adventuregame.service.level.LevelParser;
+import com.jcrawley.adventuregame.service.level.LevelReader;
+import com.jcrawley.adventuregame.service.level.Page;
 import com.jcrawley.adventuregame.service.sound.Sound;
 import com.jcrawley.adventuregame.service.sound.SoundPlayer;
 
@@ -22,6 +25,8 @@ public class GameService extends Service {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> notifyGameOverFuture;
     private SoundPlayer soundPlayer;
+    private LevelReader levelReader;
+    private LevelParser levelParser;
 
 
 
@@ -61,10 +66,19 @@ public class GameService extends Service {
     }
 
 
+    public void updateView(Page page){
+        if(mainActivity != null){
+            mainActivity.updatePage(page);
+        }
+    }
+
+
     @Override
     public void onCreate() {
-        game.init(this);
         soundPlayer = new SoundPlayer(getApplicationContext());
+        levelParser = new LevelParser();
+        levelReader = new LevelReader(getApplicationContext(), levelParser);
+        game.init(this, levelReader);
     }
 
 

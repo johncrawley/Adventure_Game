@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import com.jcrawley.adventuregame.service.GameService;
+import com.jcrawley.adventuregame.service.level.Page;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         });
         setupGameService();
     }
+
+
+    public void updatePage(Page page){
+
+    }
+
 
 
     private void setupGameService() {

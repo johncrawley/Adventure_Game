@@ -18,16 +18,16 @@ public class LevelReader {
     }
 
 
-    public void readLevel(int resId){
+    public Level readLevel(int resId){
         levelParser.initLevel();
         try(InputStream is = context.getResources().openRawResource(resId);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is))){
             reader.lines().forEach(levelParser::parse);
-            Level level = levelParser.getLevel();
+            return levelParser.getLevel();
         }
         catch(IOException e){
             e.printStackTrace();
         }
-
+        return null;
     }
 }
