@@ -1,6 +1,11 @@
 package com.jcrawley.adventuregame.view.fragment;
 
-import android.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 public class GameOverFragment extends Fragment {
+
+    public GameOverFragment(){
+
+    }
 }

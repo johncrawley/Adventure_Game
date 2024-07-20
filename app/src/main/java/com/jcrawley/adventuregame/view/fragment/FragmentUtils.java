@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.jcrawley.adventuregame.R;
+
 import java.util.function.Consumer;
 
 public class FragmentUtils {
 
 
-    public static void showDialog(Fragment parentFragment, DialogFragment dialogFragment, String tag, Bundle bundle){
+    public static void showDialog(Fragment parentFragment, DialogFragment dialogFragment, String tag, Bundle bundle) {
         FragmentManager fragmentManager = parentFragment.getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         removePreviousFragmentTransaction(fragmentManager, tag, fragmentTransaction);
@@ -23,45 +25,45 @@ public class FragmentUtils {
     }
 
 
-    public static void loadGame(Fragment parentFragment){
+    public static void loadGame(Fragment parentFragment) {
         loadFragment(parentFragment, new GameFragment(), "game_fragment");
     }
 
 
-    public static void loadAbout(Fragment parentFragment){
+    public static void loadAbout(Fragment parentFragment) {
         loadFragment(parentFragment, new GameFragment(), "about_fragment");
     }
 
 
-    public static void loadGameOver(Fragment parentFragment){
+    public static void loadGameOver(Fragment parentFragment) {
         loadFragment(parentFragment, new GameOverFragment(), "game_over_fragment");
     }
 
 
-    public static void loadMainMenu(Fragment parentFragment){
+    public static void loadMainMenu(Fragment parentFragment) {
         loadFragment(parentFragment, new MainMenuFragment(), "main_menu_fragment");
     }
 
 
-    public static void loadFragmentOnBackButtonPressed(Fragment parentFragment, Fragment destinationFragment, String fragmentTag){
+    public static void loadFragmentOnBackButtonPressed(Fragment parentFragment, Fragment destinationFragment, String fragmentTag) {
         onBackButtonPressed(parentFragment, () -> loadFragment(parentFragment, destinationFragment, fragmentTag));
     }
 
 
-    public static void loadFragment(Fragment parentFragment, Fragment fragment, String tag, Bundle bundle){
+    public static void loadFragment(Fragment parentFragment, Fragment fragment, String tag, Bundle bundle) {
         FragmentManager fragmentManager = parentFragment.getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         removePreviousFragmentTransaction(fragmentManager, tag, fragmentTransaction);
         fragment.setArguments(bundle);
         fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.pop_enter, R.anim.pop_exit )
+                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.pop_enter, R.anim.pop_exit)
                 .replace(R.id.fragment_container, fragment, tag)
                 .addToBackStack(null)
                 .commit();
     }
 
 
-    public static void onBackButtonPressed(Fragment parentFragment, Runnable action){
+    public static void onBackButtonPressed(Fragment parentFragment, Runnable action) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -72,12 +74,12 @@ public class FragmentUtils {
     }
 
 
-    public static void loadFragment(Fragment parentFragment, Fragment fragment, String tag){
+    public static void loadFragment(Fragment parentFragment, Fragment fragment, String tag) {
         loadFragment(parentFragment, fragment, tag, new Bundle());
     }
 
 
-    private static void removePreviousFragmentTransaction(FragmentManager fragmentManager, String tag, FragmentTransaction fragmentTransaction){
+    private static void removePreviousFragmentTransaction(FragmentManager fragmentManager, String tag, FragmentTransaction fragmentTransaction) {
         Fragment prev = fragmentManager.findFragmentByTag(tag);
         if (prev != null) {
             fragmentTransaction.remove(prev);
@@ -86,34 +88,34 @@ public class FragmentUtils {
     }
 
 
-    public static void setListener(Fragment fragment, String key, Consumer<Bundle> consumer){
+    public static void setListener(Fragment fragment, String key, Consumer<Bundle> consumer) {
         fragment.getParentFragmentManager().setFragmentResultListener(key, fragment, (requestKey, bundle) -> consumer.accept(bundle));
     }
 
 
-    public static void sendMessage(Fragment fragment, String key){
+    public static void sendMessage(Fragment fragment, String key) {
         sendMessage(fragment, key, new Bundle());
     }
 
 
-    public static void sendMessage(Fragment fragment, String key, Bundle bundle){
+    public static void sendMessage(Fragment fragment, String key, Bundle bundle) {
         fragment.getParentFragmentManager().setFragmentResult(key, bundle);
     }
 
 
-    public static int getInt(Bundle bundle, Enum<?> tag){
+    public static int getInt(Bundle bundle, Enum<?> tag) {
         return bundle.getInt(tag.toString());
     }
 
 
-    public static String getStr(Bundle bundle, Enum<?> tag){
+    public static String getStr(Bundle bundle, Enum<?> tag) {
         return bundle.getString(tag.toString());
     }
 
 
-    public static boolean getBoolean(Bundle bundle, Enum<?> tag){
-        return  bundle.getBoolean(tag.toString());
+    public static boolean getBoolean(Bundle bundle, Enum<?> tag) {
+        return bundle.getBoolean(tag.toString());
     }
-
+}
 
 

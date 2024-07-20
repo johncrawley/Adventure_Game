@@ -11,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import com.jcrawley.adventuregame.service.GameService;
 import com.jcrawley.adventuregame.service.level.Page;
+import com.jcrawley.adventuregame.view.fragment.MainMenuFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
             gameService.setActivity(MainActivity.this);
             //sendMessage(OptionsFragment.Message.NOTIFY_OF_SERVICE_CONNECTED);
             isServiceConnected.set(true);
+            setupFragments();
         }
 
         @Override
@@ -55,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
         setupGameService();
     }
 
+
+
+    private void setupFragments() {
+        Fragment mainMenuFragment = new MainMenuFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, mainMenuFragment)
+                .commit();
+    }
 
     public void updatePage(Page page){
 
