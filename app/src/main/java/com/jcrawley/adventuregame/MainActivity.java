@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+
     public void updatePage(Page page){
 
     }
