@@ -8,12 +8,14 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.jcrawley.adventuregame.MainActivity;
+import com.jcrawley.adventuregame.service.level.Choice;
 import com.jcrawley.adventuregame.service.level.LevelParser;
 import com.jcrawley.adventuregame.service.level.LevelReader;
 import com.jcrawley.adventuregame.service.level.Page;
 import com.jcrawley.adventuregame.service.sound.Sound;
 import com.jcrawley.adventuregame.service.sound.SoundPlayer;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -45,6 +47,16 @@ public class GameService extends Service {
         return getSharedPreferences("score_preferences", MODE_PRIVATE);
     }
 
+    public void selectChoice(int destinationPageNumber){
+        game.selectChoice(destinationPageNumber);
+    }
+
+    public void notifyPageChange(){
+        if(mainActivity != null){
+            mainActivity.notifyPageChange();
+        }
+    }
+
 
     public void quitGame(){
         game.quit();
@@ -70,6 +82,11 @@ public class GameService extends Service {
         if(mainActivity != null){
             mainActivity.updatePage(page);
         }
+    }
+
+
+    public Page getCurrentPage(){
+        return game.getCurrentPage();
     }
 
 

@@ -1,5 +1,7 @@
 package com.jcrawley.adventuregame;
 
+import static com.jcrawley.adventuregame.view.fragment.FragmentUtils.sendMessage;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -13,10 +15,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import com.jcrawley.adventuregame.service.GameService;
 import com.jcrawley.adventuregame.service.level.Page;
 import com.jcrawley.adventuregame.view.fragment.MainMenuFragment;
+import com.jcrawley.adventuregame.view.fragment.Message;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void notifyPageChange(){
+        sendMessage(this, Message.NOTIFY_PAGE_LOADED);
+    }
+
+
+    public Optional<GameService> getGameService(){
+        return Optional.ofNullable(gameService);
+    }
 
 
     private void setupGameService() {

@@ -1,9 +1,11 @@
 package com.jcrawley.adventuregame.view.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -100,6 +102,11 @@ public class FragmentUtils {
 
     public static void sendMessage(Fragment fragment, String key, Bundle bundle) {
         fragment.getParentFragmentManager().setFragmentResult(key, bundle);
+    }
+
+
+    public static void sendMessage(AppCompatActivity activity, Message message) {
+        activity.getSupportFragmentManager().setFragmentResult(message.name(), new Bundle());
     }
 
 

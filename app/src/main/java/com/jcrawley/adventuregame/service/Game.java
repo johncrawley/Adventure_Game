@@ -25,7 +25,17 @@ public class Game {
 
     public void startGame(){}
 
+    public Page getCurrentPage(){
+        return currentPage;
+    }
+
     public void quit(){
 
+    }
+
+
+    public void selectChoice(int destinationPageNumber){
+        currentPage = currentLevel.getPage(destinationPageNumber);
+        gameService.notifyPageChange();
     }
 }
