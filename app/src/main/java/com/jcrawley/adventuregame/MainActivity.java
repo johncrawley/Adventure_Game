@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             gameService.setActivity(MainActivity.this);
             //sendMessage(OptionsFragment.Message.NOTIFY_OF_SERVICE_CONNECTED);
             isServiceConnected.set(true);
-            setupFragments();
+
         }
 
         @Override
@@ -54,17 +54,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        setupWindowInsetsListener();
+        setupFragmentsIf(savedInstanceState == null);
+        setupGameService();
+    }
+
+
+    private void setupWindowInsetsListener(){
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        setupGameService();
     }
 
 
-
-    private void setupFragments() {
+    private void setupFragmentsIf(boolean isFirstTime) {
+        if(!isFirstTime){
+            return;
+        }
         Fragment mainMenuFragment = new MainMenuFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mainMenuFragment)
