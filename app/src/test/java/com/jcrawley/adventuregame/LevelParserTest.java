@@ -32,12 +32,10 @@ public class LevelParserTest {
         levelParser.initLevel();
 
         String input = """
-                1
-                Here is the beginning of the story. You are in a forest.
-                \s
-                Choice 1, 2
-                Choice 2, 3
-                Choice 3, 455\s\s
+                [1. Here is the beginning of the story. You are in a forest.
+                - Choice 1, 2
+                - Choice 2, 3
+                - Choice 3, 455\s\s
                 """;
         getListFrom(input).forEach(levelParser::parse);
         Level level = levelParser.getLevel();
@@ -50,20 +48,16 @@ public class LevelParserTest {
         assertChoice(choices.get(2), "Choice 3", 455);
 
         String input2 = """
-                \s
-                5
-                You are standing in a clearing. There is a satchel on the ground.
+              
+                [5. You are standing in a clearing. There is a satchel on the ground.
                 Suddenly, a voice can be heard: "Run away now!". What do you do?
-                \s
-                Run away, 225
-                Grab the satchel and run away, 35\s\s
-                Stay where you are, 854
-                \s
-                9
-                You are inside the Castle door. There is a noise from the cellar.
-                \s
-                Leave immediately, 289
-                Explore the cellar, 192
+                -Run away, 225
+                -Grab the satchel and run away, 35
+                -Stay where you are, 854
+              
+                [9. You are inside the Castle door. There is a noise from the cellar.
+                -Leave immediately, 289
+                -Explore the cellar, 192
                 """;
         getListFrom(input2).forEach(levelParser::parse);
         level = levelParser.getLevel();
@@ -102,134 +96,4 @@ public class LevelParserTest {
         assertEquals(expectedLabel, actualLabel);
     }
 
-
-    @Test
-    public void canParseLine(){
-        levelParser.initLevel();
-        assertParserState( LevelParser.ParseState.PAGE_NUMBER);
-        levelParser.parse("1");
-        int pageNumber = 1;
-        assertPageNumberParsed(pageNumber);
-        assertParserState(LevelParser.ParseState.TEXT);
-
-        String text = "This is a story all about how, my adventure got flip turned upside down";
-        levelParser.parse(text);
-        assertTextParsed(text);
-        String text2 = "You are in a forest.";
-        levelParser.parse(text2);
-        String totalText = text + "\n" + text2;
-        assertTextParsed(totalText);
-        levelParser.parse(" ");
-        assertParserState(LevelParser.ParseState.CHOICES);
-        assertNumberOfChoices(0);
-        levelParser.parse("Take the Left Path, 23");
-        assertNumberOfChoices(1);
-        levelParser.parse("Take the Right Path, 26");
-        assertNumberOfChoices(2);
-        levelParser.parse(" ");
-        assertParserState(LevelParser.ParseState.PAGE_NUMBER);
-
-        Level level = levelParser.getLevel();
-        assertEquals(1, level.getPages().size());
-        Page page = level.getPage(pageNumber);
-        assertEquals(totalText, page.text());
-        assertEquals(pageNumber, page.pageNumber());
-        List<Choice> choices = page.choices();
-        assertEquals(2, choices.size());
-        assertChoice(choices.get(0), "Take the Left Path", 23);
-        assertChoice(choices.get(1), "Take the Right Path", 26);
-    }
-
-
-    public void assertParserState(LevelParser.ParseState expectedState){
-        try {
-            Field field = LevelParser.class.getDeclaredField("currentParseState");
-            field.setAccessible(true);
-            //field.set(object, value);
-            LevelParser.ParseState actualState = (LevelParser.ParseState)field.get(levelParser);
-            assertEquals(expectedState, actualState);
-        }catch (NoSuchFieldException | IllegalAccessException e){
-            handleException(e);
-        }
-    }
-
-
-    public void assertNumberOfChoices(int expected){
-        try {
-            Field field = LevelParser.class.getDeclaredField("currentChoices");
-            field.setAccessible(true);
-            List<?> actualChoices = (List<?>) field.get(levelParser);
-            if(actualChoices == null){
-                throw new RuntimeException("choices could not be extracted from parser for comparison");
-            }
-            assertEquals(expected, actualChoices.size());
-        }catch (NoSuchFieldException | IllegalAccessException e){
-            handleException(e);
-        }
-    }
-
-
-    public void assertPageNumberParsed(int expectedPageNumber){
-        try {
-            Field field = LevelParser.class.getDeclaredField("currentPageNumber");
-            field.setAccessible(true);
-            Integer actualPageNumber = (Integer)field.get(levelParser);
-            if(actualPageNumber == null){
-                throw new RuntimeException("could not extract page number from parser to compare");
-            }
-            assertEquals(expectedPageNumber, (int)actualPageNumber);
-        }catch (NoSuchFieldException | IllegalAccessException e){
-           handleException(e);
-        }
-    }
-
-
-
-    public void assertTextParsed(String expectedText){
-        try {
-            Field field = LevelParser.class.getDeclaredField("currentText");
-            field.setAccessible(true);
-            String actualText = (String)field.get(levelParser);
-            assertEquals(expectedText, actualText);
-        }catch (NoSuchFieldException | IllegalAccessException e){
-            handleException(e);
-        }
-    }
-
-
-    private void handleException(Exception e){
-        System.out.println(e.getMessage());
-    }
-
-
-    @Test
-    public void testLineParser(){
-        invokeParseNumber("1");
-        assertPageNumberParsed(1);
-
-        invokeParseNumber(" 2");
-        assertPageNumberParsed(2);
-
-        invokeParseNumber(" 3   ");
-        assertPageNumberParsed(3);
-    }
-
-
-    private void invokeParseNumber(String numberLine){
-        try {
-            Method method = LevelParser.class.getDeclaredMethod("parseNumber", String.class);
-            method.setAccessible(true);
-            method.invoke(levelParser, numberLine);
-
-        }catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-            handleException(e);
-        }
-    }
-
-/*
-    private void foo(Class targetClass,  ){
-
-    }
-
- */
 }

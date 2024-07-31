@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class LevelReader {
 
@@ -19,15 +20,27 @@ public class LevelReader {
 
 
     public Level readLevel(int resId){
-        levelParser.initLevel();
-        try(InputStream is = context.getResources().openRawResource(resId);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is))){
-            reader.lines().forEach(levelParser::parse);
-            return levelParser.getLevel();
+        try(InputStream is = context.getResources().openRawResource(resId)){
+            return scanLevelFrom(is);
+        }catch (IOException e){
+            handleException(e);
         }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        return null;
+        return new Level();
     }
+
+
+    public Level scanLevelFrom(InputStream is){
+        levelParser.initLevel();
+        Scanner s = new Scanner(is).useDelimiter("\\n");
+        while(s.hasNext()){
+            levelParser.parse(s.next());
+        }
+        return levelParser.getLevel();
+    }
+
+
+    private void handleException(IOException e){
+
+    }
+
 }

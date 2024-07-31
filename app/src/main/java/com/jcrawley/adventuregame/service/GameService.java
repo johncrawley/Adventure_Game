@@ -74,14 +74,22 @@ public class GameService extends Service {
 
 
     public void startGame(){
+        log("Entered startGame()");
         game.startGame();
     }
 
 
     public void updateView(Page page){
+        log("Entered updateView()");
         if(mainActivity != null){
+            log("Entered updateView() mainActivity is not null!");
             mainActivity.updatePage(page);
         }
+    }
+
+
+    private void log(String msg){
+        System.out.println("^^^ GameService: " + msg);
     }
 
 

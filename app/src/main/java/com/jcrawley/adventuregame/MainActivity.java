@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void updatePage(Page page){
-
+        sendMessage(this, Message.NOTIFY_PAGE_LOADED);
     }
 
 

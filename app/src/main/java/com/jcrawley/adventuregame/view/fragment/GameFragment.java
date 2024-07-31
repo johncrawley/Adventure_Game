@@ -32,9 +32,15 @@ public class GameFragment extends Fragment {
                              Bundle savedInstanceState) {
         View parentView = inflater.inflate(R.layout.fragment_game, container, false);
         setupViews(parentView);
+        log("Entered onCreateView()");
         getGameService().ifPresent(GameService::startGame);
+        if(!getGameService().isPresent()) {
+            log("GameService is unavailable!");
+        }
+        setupListeners();
         return parentView;
     }
+
 
     private void setupViews(View parentView){
         gameTextView = parentView.findViewById(R.id.gameText);
@@ -42,16 +48,33 @@ public class GameFragment extends Fragment {
     }
 
 
-    private void setupListeners(){
-        //FragmentUtils.setListener(this, Message.NOTIFY_PAGE_LOADED.toString(), b -> process(this::updateTimeRemaining, b));
+    private void log(String msg){
+        System.out.println("^^^ GameFragment: " + msg);
     }
 
 
 
+    private void setupListeners(){
+        FragmentUtils.setListener(this, Message.NOTIFY_PAGE_LOADED, b -> processNextPage());
+    }
+
+
     private void addChoicesToLayout(){
-        getGameService().ifPresent(
-                GameService::getCurrentPage
-        );
+        getGameService().ifPresent(GameService::getCurrentPage);
+    }
+
+
+    private void processNextPage(){
+        log("Entered processNextPage()");
+        getGameService().ifPresent(gs ->{
+            Page page = gs.getCurrentPage();
+            if(page != null){
+                assignPageToView(page);
+            }
+            else{
+                log("processNextPage() page is null!");
+            }
+        });
     }
 
 
@@ -62,22 +85,27 @@ public class GameFragment extends Fragment {
 
 
     private void assignText(String text){
+        log("Entered assignText()");
         gameTextView.setText(text);
     }
 
 
     private void assignChoices(List<Choice> choices){
+        log("Entered assignChoices, number of choices: " + choices.size());
         choicesLayout.removeAllViews();
         for(Choice choice : choices){
-            addChoiceToLayout(choice);
+            choicesLayout.addView(createButtonFor(choice));
         }
     }
 
-    private void addChoiceToLayout(Choice choice){
-        Button button = new Button(getContext());
-        button.setTag(choice.label());
-        button.setOnClickListener(v -> selectChoice(choice.destinationPageNumber()));
 
+    public Button createButtonFor(Choice choice){
+        Button button = new Button(getContext());
+        log("choice label: " + choice.label() + " choice destination: " + choice.destinationPageNumber());
+        button.setTag(choice.label());
+        button.setText(choice.label());
+        button.setOnClickListener(v -> selectChoice(choice.destinationPageNumber()));
+        return button;
     }
 
 

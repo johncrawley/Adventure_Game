@@ -13,17 +13,25 @@ public class Game {
     private Page currentPage;
 
     public void init(GameService gameService, LevelReader levelReader){
+        log("Entered init");
         this.gameService = gameService;
         this.levelReader = levelReader;
         currentLevel = levelReader.readLevel(R.raw.level_1);
         currentPage = currentLevel.getPage(1);
+        boolean isCurrentPageNull = currentPage == null;
+         log("is current page null? " + isCurrentPageNull);
+
     }
 
     private void updateView(){
         gameService.updateView(currentPage);
     }
 
-    public void startGame(){}
+    public void startGame(){
+        updateView();
+
+
+    }
 
     public Page getCurrentPage(){
         return currentPage;
@@ -37,5 +45,9 @@ public class Game {
     public void selectChoice(int destinationPageNumber){
         currentPage = currentLevel.getPage(destinationPageNumber);
         gameService.notifyPageChange();
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ Game: " + msg);
     }
 }

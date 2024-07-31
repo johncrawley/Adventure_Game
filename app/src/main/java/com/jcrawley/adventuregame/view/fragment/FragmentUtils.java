@@ -95,6 +95,11 @@ public class FragmentUtils {
     }
 
 
+    public static void setListener(Fragment fragment, Message message, Consumer<Bundle> consumer) {
+        fragment.getParentFragmentManager().setFragmentResultListener(message.name(), fragment, (requestKey, bundle) -> consumer.accept(bundle));
+    }
+
+
     public static void sendMessage(Fragment fragment, String key) {
         sendMessage(fragment, key, new Bundle());
     }
