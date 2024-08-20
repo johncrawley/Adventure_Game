@@ -2,4 +2,5 @@
 <resources>
 
     <dimen name="game_text_size">34sp</dimen>
+    <dimen name="game_text_margin">20dp</dimen>
 </resources>
